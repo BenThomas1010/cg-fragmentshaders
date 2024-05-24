@@ -28,7 +28,10 @@ let data = reactive({
     materials: {},
     selected_texture: 'video',
     textures: {video: null, webcam: null},
-    start_stop: 'Stop'
+    start_stop: 'Stop', 
+    gl: null,
+    scene: null,
+    time: 0.0,
 });
 
 
@@ -184,6 +187,8 @@ onMounted(() => {
 
     // Animation function - called before each frame gets rendered
     data.scene.onBeforeRenderObservable.add(() => {
+        let delta_time = (1.0 / 60.0) * Scene.getAnimationRatio();
+        time += delta_time;
         if (data.filter !== rect.material.name) {
             rect.material = data.materials[data.filter];
         }
