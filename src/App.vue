@@ -29,9 +29,6 @@ let data = reactive({
     selected_texture: 'video',
     textures: {video: null, webcam: null},
     start_stop: 'Stop', 
-    gl: null,
-    scene: null,
-    time: 0.0,
 });
 
 
@@ -147,7 +144,7 @@ onMounted(() => {
     data.materials.custom = createShaderMaterial('custom', data.scene);
 
     // Create video textures
-    data.textures.video = new VideoTexture('video', BASE_URL + 'videos/dm_vector.mp4', data.scene, false,
+    data.textures.video = new VideoTexture('video', BASE_URL + 'videos/spongebobWriting.mp4', data.scene, false,
                                            false, VideoTexture.BILINEAR_SAMPLINGMODE, 
                                            {autoUpdateTexture: true, autoPlay: true, loop: true, muted: true});
 
@@ -185,10 +182,12 @@ onMounted(() => {
     // Assign triangle a material
     rect.material = data.materials.standard;
 
+    let time = 0.0;
     // Animation function - called before each frame gets rendered
     data.scene.onBeforeRenderObservable.add(() => {
-        let delta_time = (1.0 / 60.0) * Scene.getAnimationRatio();
+        let delta_time = (1.0 / 60.0) * data.scene.getAnimationRatio();
         time += delta_time;
+        data.materials.ripple.setFloat('timeHelper', time);
         if (data.filter !== rect.material.name) {
             rect.material = data.materials[data.filter];
         }
